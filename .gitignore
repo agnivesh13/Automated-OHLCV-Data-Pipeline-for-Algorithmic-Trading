@@ -50,4 +50,4 @@ ohlcv_*.json
 
 # Package managers
 package-lock.json
-node_modules/
+node_modules/desktop.ini
