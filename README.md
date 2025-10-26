@@ -1,1 +1,0 @@
-# Automated-OHLCV-Data-Pipeline-for-Algorithmic-Trading
