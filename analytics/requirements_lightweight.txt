@@ -1,0 +1,5 @@
+# Lightweight Analytics Requirements
+# NO PANDAS - Uses only boto3 (already included in Lambda runtime)
+# This keeps deployment package tiny (<1 MB)
+
+# boto3 is pre-installed in Lambda runtime, no need to include it

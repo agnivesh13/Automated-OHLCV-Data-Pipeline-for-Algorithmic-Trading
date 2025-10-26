@@ -1,0 +1,8 @@
+# Alternative requirements.txt for Lambda compatibility
+# We'll use requests only and avoid fyers_apiv3 compilation issues
+
+requests==2.31.0
+pytz==2024.1
+
+# Note: Skip fyers_apiv3 due to compilation issues
+# Instead, we'll mimic what fyers_apiv3 does internally

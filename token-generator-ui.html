@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fyers Token Generator - Daily Setup</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .step {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 4px solid #007bff;
+        }
+
+        .step h3 {
+            color: #007bff;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step-number {
+            background: #007bff;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #1e7e34;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .btn-warning:hover {
+            background: #e0a800;
+        }
+
+        .auth-url {
+            background: #e7f3ff;
+            border: 1px solid #b8daff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            word-break: break-all;
+        }
+
+        .success-message {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            border: 1px solid #f1aeb5;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .token-display {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 14px;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+
+        .quick-actions {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e5e9;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-success {
+            background: #28a745;
+        }
+
+        .status-pending {
+            background: #ffc107;
+        }
+
+        .status-error {
+            background: #dc3545;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔑 Fyers Token Generator</h1>
+            <p>Daily token generation made simple</p>
+        </div>
+
+        <!-- Step 1: Configuration -->
+        <div class="step" id="step1">
+            <h3><span class="step-number">1</span>Configure Credentials</h3>
+            <div class="form-group">
+                <label for="clientId">Fyers Client ID:</label>
+                <input type="text" id="clientId" placeholder="ABC123-100" value="">
+            </div>
+            <div class="form-group">
+                <label for="appSecret">Fyers App Secret:</label>
+                <input type="password" id="appSecret" placeholder="Your app secret">
+            </div>
+            <button class="btn" onclick="generateAuthUrl()">Generate Login URL</button>
+        </div>
+
+        <!-- Step 2: Login -->
+        <div class="step" id="step2" style="display: none;">
+            <h3><span class="step-number">2</span>Login to Fyers</h3>
+            <p><strong>Click the button below to open Fyers login:</strong></p>
+            <div id="authUrlDisplay" class="auth-url"></div>
+            <button class="btn btn-success" id="openFyersBtn" onclick="openFyersLogin()" style="display: none;">
+                🌐 Open Fyers Login
+            </button>
+            <p style="margin-top: 15px;"><strong>After login, you'll be redirected. Copy the URL from your browser and
+                    paste it below:</strong></p>
+            <div class="form-group">
+                <label for="redirectUrl">Paste the complete redirect URL here:</label>
+                <textarea id="redirectUrl" rows="3"
+                    placeholder="https://trade.fyers.in/api-login/redirect-to-app?auth_code=..."></textarea>
+            </div>
+            <button class="btn" onclick="extractAuthCode()">Extract Auth Code & Generate Tokens</button>
+        </div>
+
+        <!-- Step 3: Token Generation -->
+        <div class="step" id="step3" style="display: none;">
+            <h3><span class="step-number">3</span>Generated Tokens</h3>
+            <div id="tokenResults"></div>
+            <div class="quick-actions">
+                <button class="btn btn-success" onclick="updateAWSSSM()">📡 Update AWS SSM Parameters</button>
+                <button class="btn btn-warning" onclick="downloadTokens()">💾 Download Tokens</button>
+                <button class="btn" onclick="testTokens()">🧪 Test Tokens</button>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <h4>Quick Actions:</h4>
+            <button class="btn" onclick="resetForm()">🔄 Start Over</button>
+            <button class="btn" onclick="loadSavedConfig()">📂 Load Saved Config</button>
+            <button class="btn" onclick="viewLogs()">📋 View System Logs</button>
+        </div>
+
+        <!-- Messages -->
+        <div id="messages"></div>
+    </div>
+
+    <script>
+        let currentTokens = {};
+        let authUrl = '';
+
+        // Load saved configuration on page load
+        window.onload = function () {
+            loadSavedConfig();
+        };
+
+        function loadSavedConfig() {
+            const savedClientId = localStorage.getItem('fyersClientId');
+            const savedAppSecret = localStorage.getItem('fyersAppSecret');
+
+            if (savedClientId) {
+                document.getElementById('clientId').value = savedClientId;
+            }
+            if (savedAppSecret) {
+                document.getElementById('appSecret').value = savedAppSecret;
+            }
+
+            if (savedClientId && savedAppSecret) {
+                showMessage('Configuration loaded from browser storage', 'success');
+            }
+        }
+
+        function generateAuthUrl() {
+            const clientId = document.getElementById('clientId').value.trim();
+            const appSecret = document.getElementById('appSecret').value.trim();
+
+            if (!clientId || !appSecret) {
+                showMessage('Please enter both Client ID and App Secret', 'error');
+                return;
+            }
+
+            // Save configuration
+            localStorage.setItem('fyersClientId', clientId);
+            localStorage.setItem('fyersAppSecret', appSecret);
+
+            // Generate auth URL
+            const params = new URLSearchParams({
+                client_id: clientId,
+                redirect_uri: 'https://trade.fyers.in/api-login/redirect-to-app',
+                response_type: 'code',
+                state: 'sample_state'
+            });
+
+            authUrl = `https://api-t2.fyers.in/api/v3/generate-authcode?${params.toString()}`;
+
+            document.getElementById('authUrlDisplay').innerHTML = `
+                <strong>Your authorization URL:</strong><br>
+                <code>${authUrl}</code>
+            `;
+
+            document.getElementById('openFyersBtn').style.display = 'inline-block';
+            document.getElementById('step2').style.display = 'block';
+
+            showMessage('✅ Authorization URL generated successfully!', 'success');
+        }
+
+        function openFyersLogin() {
+            if (authUrl) {
+                window.open(authUrl, '_blank');
+                showMessage('Fyers login opened in new tab. After login, copy the redirect URL and paste it below.', 'success');
+            }
+        }
+
+        function extractAuthCode() {
+            const redirectUrl = document.getElementById('redirectUrl').value.trim();
+
+            if (!redirectUrl) {
+                showMessage('Please paste the redirect URL', 'error');
+                return;
+            }
+
+            try {
+                const url = new URL(redirectUrl);
+                const authCode = url.searchParams.get('auth_code');
+
+                if (!authCode) {
+                    showMessage('Auth code not found in URL. Please check the URL.', 'error');
+                    return;
+                }
+
+                generateTokens(authCode);
+            } catch (error) {
+                showMessage('Invalid URL format. Please paste the complete redirect URL.', 'error');
+            }
+        }
+
+        async function generateTokens(authCode) {
+            const clientId = document.getElementById('clientId').value.trim();
+            const appSecret = document.getElementById('appSecret').value.trim();
+
+            try {
+                showMessage('🔄 Generating tokens...', 'pending');
+
+                // Calculate app hash (SHA-256 of clientId:appSecret)
+                const appIdHash = await calculateSHA256(`${clientId}:${appSecret}`);
+
+                // Token request payload
+                const payload = {
+                    grant_type: 'authorization_code',
+                    appIdHash: appIdHash,
+                    code: authCode
+                };
+
+                // Make token request
+                const response = await fetch('https://api-t2.fyers.in/api/v3/validate-authcode', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (data.s === 'ok' && data.access_token && data.refresh_token) {
+                    currentTokens = {
+                        access_token: data.access_token,
+                        refresh_token: data.refresh_token,
+                        client_id: clientId,
+                        generated_at: new Date().toISOString()
+                    };
+
+                    displayTokens();
+                    document.getElementById('step3').style.display = 'block';
+                    showMessage('✅ Tokens generated successfully!', 'success');
+                } else {
+                    showMessage(`❌ Token generation failed: ${data.message || 'Unknown error'}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`❌ Error generating tokens: ${error.message}`, 'error');
+            }
+        }
+
+        function displayTokens() {
+            const tokenHtml = `
+                <div class="success-message">
+                    <strong>✅ Tokens Generated Successfully!</strong>
+                </div>
+                <div class="form-group">
+                    <label>Access Token (expires in ~24 hours):</label>
+                    <div class="token-display">${currentTokens.access_token}</div>
+                </div>
+                <div class="form-group">
+                    <label>Refresh Token (expires in ~15 days):</label>
+                    <div class="token-display">${currentTokens.refresh_token}</div>
+                </div>
+                <div class="form-group">
+                    <label>Generated At:</label>
+                    <div class="token-display">${new Date(currentTokens.generated_at).toLocaleString()}</div>
+                </div>
+            `;
+
+            document.getElementById('tokenResults').innerHTML = tokenHtml;
+        }
+
+        async function updateAWSSSM() {
+            if (!currentTokens.access_token || !currentTokens.refresh_token) {
+                showMessage('No tokens to update. Please generate tokens first.', 'error');
+                return;
+            }
+
+            const commands = `# AWS SSM Parameter Update Commands
+# Generated on: ${new Date().toLocaleString()}
+
+# Update AWS SSM Parameters with your new tokens
+aws ssm put-parameter --name "/stock-pipeline/fyers/access_token" --value "${currentTokens.access_token}" --type "SecureString" --overwrite
+aws ssm put-parameter --name "/stock-pipeline/fyers/refresh_token" --value "${currentTokens.refresh_token}" --type "SecureString" --overwrite
+aws ssm put-parameter --name "/stock-pipeline/fyers/client_id" --value "${currentTokens.client_id}" --type "SecureString" --overwrite
+
+# Verify update
+aws ssm get-parameters --names "/stock-pipeline/fyers/access_token" "/stock-pipeline/fyers/refresh_token" --with-decryption
+
+# Test Lambda function with new tokens
+aws lambda invoke --function-name stock-pipeline-ingestion --payload "{}" test-response.json
+
+echo "Tokens updated successfully!"`;
+
+            // Create a downloadable script
+            const blob = new Blob([commands], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `update-ssm-${new Date().toISOString().split('T')[0]}.sh`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+
+            showMessage('📥 AWS CLI commands downloaded! Run the script to update SSM parameters.', 'success');
+        }
+
+        function downloadTokens() {
+            if (!currentTokens.access_token) {
+                showMessage('No tokens to download. Please generate tokens first.', 'error');
+                return;
+            }
+
+            const tokenData = {
+                ...currentTokens,
+                note: 'Generated via Fyers Token Generator Web UI',
+                expires_info: {
+                    access_token: 'Expires in ~24 hours',
+                    refresh_token: 'Expires in ~15 days'
+                },
+                usage_instructions: {
+                    access_token_usage: 'Use for API calls with format: clientId:accessToken',
+                    aws_ssm_parameters: {
+                        access_token: '/stock-pipeline/fyers/access_token',
+                        refresh_token: '/stock-pipeline/fyers/refresh_token',
+                        client_id: '/stock-pipeline/fyers/client_id'
+                    }
+                }
+            };
+
+            const blob = new Blob([JSON.stringify(tokenData, null, 2)], { type: 'application/json' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `fyers-tokens-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+
+            showMessage('💾 Tokens downloaded successfully!', 'success');
+        }
+
+        async function testTokens() {
+            if (!currentTokens.access_token || !currentTokens.client_id) {
+                showMessage('No tokens to test. Please generate tokens first.', 'error');
+                return;
+            }
+
+            try {
+                showMessage('🧪 Testing tokens...', 'pending');
+
+                // Test with Fyers profile API
+                const response = await fetch('https://api-t1.fyers.in/api/v3/profile', {
+                    headers: {
+                        'Authorization': `${currentTokens.client_id}:${currentTokens.access_token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.s === 'ok') {
+                    showMessage(`✅ Tokens are valid! Profile: ${data.data?.name || 'Available'}`, 'success');
+                } else {
+                    showMessage(`⚠️ Token test failed: ${data.message || 'Unknown error'}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`❌ Error testing tokens: ${error.message}`, 'error');
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('step2').style.display = 'none';
+            document.getElementById('step3').style.display = 'none';
+            document.getElementById('redirectUrl').value = '';
+            document.getElementById('messages').innerHTML = '';
+            currentTokens = {};
+            authUrl = '';
+
+            showMessage('Form reset. You can start over.', 'success');
+        }
+
+        function viewLogs() {
+            const logCommands = `# AWS CloudWatch and Lambda Log Commands
+# View recent Lambda logs
+aws logs filter-log-events --log-group-name "/aws/lambda/stock-pipeline-ingestion" --start-time $(date -d '1 hour ago' +%s)000
+
+# Check current SSM parameters
+aws ssm get-parameters --names "/stock-pipeline/fyers/access_token" "/stock-pipeline/fyers/refresh_token" --with-decryption
+
+# Test Lambda function
+aws lambda invoke --function-name stock-pipeline-ingestion --payload "{}" test-response.json
+
+# Check S3 bucket for latest data
+aws s3 ls s3://stock-pipeline-data/ --recursive | tail -10
+
+# View Lambda function configuration
+aws lambda get-function-configuration --function-name stock-pipeline-ingestion`;
+
+            navigator.clipboard.writeText(logCommands).then(() => {
+                showMessage('📋 Log commands copied to clipboard! Paste in your terminal.', 'success');
+            }).catch(() => {
+                showMessage('Log commands ready. Check browser console for details.', 'success');
+                console.log('AWS CLI Commands for Logging:', logCommands);
+            });
+        }
+
+        function showMessage(message, type) {
+            const messagesDiv = document.getElementById('messages');
+            const statusClass = type === 'success' ? 'success-message' :
+                type === 'error' ? 'error-message' :
+                    'auth-url';
+
+            const statusIndicator = type === 'success' ? 'status-success' :
+                type === 'error' ? 'status-error' :
+                    'status-pending';
+
+            messagesDiv.innerHTML = `
+                <div class="${statusClass}">
+                    <span class="status-indicator ${statusIndicator}"></span>
+                    ${message}
+                </div>
+            `;
+
+            // Auto-clear success messages after 5 seconds
+            if (type === 'success') {
+                setTimeout(() => {
+                    messagesDiv.innerHTML = '';
+                }, 5000);
+            }
+        }
+
+        async function calculateSHA256(text) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(text);
+            const hash = await crypto.subtle.digest('SHA-256', data);
+            return Array.from(new Uint8Array(hash))
+                .map(b => b.toString(16).padStart(2, '0'))
+                .join('');
+        }
+    </script>
+</body>
+
+</html>

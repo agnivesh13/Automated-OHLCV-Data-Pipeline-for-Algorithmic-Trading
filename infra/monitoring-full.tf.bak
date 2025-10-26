@@ -1,0 +1,123 @@
+# Add CloudWatch Dashboard for monitoring
+resource "aws_cloudwatch_dashboard" "stock_pipeline_dashboard" {
+  dashboard_name = "${var.project_name}-monitoring-dashboard"
+
+  dashboard_body = jsonencode({
+    widgets = [
+      {
+        type   = "metric"
+        x      = 0
+        y      = 0
+        width  = 12
+        height = 6
+
+        properties = {
+          metrics = [
+            ["AWS/ECS", "CPUUtilization", "ServiceName", "${var.project_name}-ingestion"],
+            [".", "MemoryUtilization", ".", "."],
+            ["AWS/Glue", "glue.driver.aggregate.numCompletedTasks", "JobName", "${var.project_name}-etl"],
+            ["AWS/S3", "BucketSizeBytes", "BucketName", aws_s3_bucket.ohlcv_data.id, "StorageType", "StandardStorage"]
+          ]
+          view    = "timeSeries"
+          stacked = false
+          region  = var.aws_region
+          title   = "Pipeline Performance Metrics"
+          period  = 300
+        }
+      },
+      {
+        type   = "log"
+        x      = 0
+        y      = 6
+        width  = 24
+        height = 6
+
+        properties = {
+          query   = "SOURCE '/ecs/${var.project_name}-ingestion' | fields @timestamp, @message | filter @message like /ERROR/ | sort @timestamp desc | limit 20"
+          region  = var.aws_region
+          title   = "Recent Errors"
+        }
+      },
+      {
+        type   = "metric"
+        x      = 12
+        y      = 0
+        width  = 12
+        height = 6
+
+        properties = {
+          metrics = [
+            ["AWS/RDS", "CPUUtilization", "DBInstanceIdentifier", aws_db_instance.postgres.id],
+            [".", "DatabaseConnections", ".", "."],
+            [".", "FreeStorageSpace", ".", "."]
+          ]
+          view    = "timeSeries"
+          stacked = false
+          region  = var.aws_region
+          title   = "Database Metrics"
+          period  = 300
+        }
+      }
+    ]
+  })
+
+  tags = local.common_tags
+}
+
+# CloudWatch Alarms for critical metrics
+resource "aws_cloudwatch_metric_alarm" "ecs_cpu_high" {
+  alarm_name          = "${var.project_name}-ecs-cpu-high"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "2"
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/ECS"
+  period              = "300"
+  statistic           = "Average"
+  threshold           = "80"
+  alarm_description   = "This metric monitors ECS CPU utilization"
+  alarm_actions       = [aws_sns_topic.alerts.arn]
+
+  dimensions = {
+    ServiceName = "${var.project_name}-ingestion"
+  }
+
+  tags = local.common_tags
+}
+
+resource "aws_cloudwatch_metric_alarm" "rds_cpu_high" {
+  alarm_name          = "${var.project_name}-rds-cpu-high"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "2"
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/RDS"
+  period              = "300"
+  statistic           = "Average"
+  threshold           = "75"
+  alarm_description   = "This metric monitors RDS CPU utilization"
+  alarm_actions       = [aws_sns_topic.alerts.arn]
+
+  dimensions = {
+    DBInstanceIdentifier = aws_db_instance.postgres.id
+  }
+
+  tags = local.common_tags
+}
+
+resource "aws_cloudwatch_metric_alarm" "glue_job_failure" {
+  alarm_name          = "${var.project_name}-glue-job-failure"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "glue.driver.aggregate.numFailedTasks"
+  namespace           = "AWS/Glue"
+  period              = "300"
+  statistic           = "Sum"
+  threshold           = "0"
+  alarm_description   = "This metric monitors Glue job failures"
+  alarm_actions       = [aws_sns_topic.alerts.arn]
+
+  dimensions = {
+    JobName = aws_glue_job.etl.name
+  }
+
+  tags = local.common_tags
+}

@@ -1,0 +1,123 @@
+{
+    "api_info": {
+        "version": "1.0",
+        "last_updated": "2025-08-29",
+        "region": "ap-south-1",
+        "data_frequency": "15 minutes",
+        "market_hours": "09:15 - 15:30 IST"
+    },
+    "endpoints": {
+        "s3_bucket": {
+            "name": "stock-pipeline-dev-ohlcv-{SUFFIX}",
+            "region": "ap-south-1",
+            "data_structure": {
+                "latest": "latest/{SYMBOL}_latest.json",
+                "historical": "year={YYYY}/month={MM}/day={DD}/hour={HH}/{SYMBOL}_{YYYYMMDD}_{HHMM}.json"
+            }
+        },
+        "sns_topic": {
+            "arn": "arn:aws:sns:ap-south-1:{ACCOUNT_ID}:stock-pipeline-alerts",
+            "description": "Real-time notifications for data updates and alerts"
+        },
+        "cloudwatch_logs": {
+            "log_group": "/aws/lambda/stock-pipeline-ingestion",
+            "region": "ap-south-1"
+        }
+    },
+    "data_format": {
+        "content_type": "application/json",
+        "encoding": "utf-8",
+        "schema": {
+            "symbol": "string",
+            "timestamp": "ISO 8601 datetime",
+            "ohlcv": {
+                "open": "number",
+                "high": "number",
+                "low": "number",
+                "close": "number",
+                "volume": "integer"
+            },
+            "metadata": {
+                "source": "string",
+                "resolution": "string",
+                "currency": "string",
+                "exchange": "string"
+            },
+            "technical_indicators": {
+                "sma_20": "number",
+                "rsi_14": "number",
+                "bollinger_upper": "number",
+                "bollinger_lower": "number"
+            }
+        }
+    },
+    "available_symbols": [
+        "RELIANCE",
+        "TCS",
+        "INFY",
+        "HDFCBANK",
+        "ICICIBANK",
+        "HINDUNILVR",
+        "ITC",
+        "LT",
+        "BHARTIARTL",
+        "KOTAKBANK"
+    ],
+    "access_methods": {
+        "s3_direct": {
+            "method": "GET",
+            "authentication": "AWS IAM",
+            "rate_limit": "5500 requests/second",
+            "cost": "$0.0004 per 1000 requests"
+        },
+        "sns_subscription": {
+            "protocols": [
+                "email",
+                "sms",
+                "sqs",
+                "lambda"
+            ],
+            "cost": "$0.50 per 1 million notifications"
+        }
+    },
+    "code_examples": {
+        "python": {
+            "package": "boto3",
+            "install": "pip install boto3 pandas",
+            "sample_code": "https://github.com/your-org/stock-pipeline/examples/python"
+        },
+        "nodejs": {
+            "package": "aws-sdk",
+            "install": "npm install aws-sdk",
+            "sample_code": "https://github.com/your-org/stock-pipeline/examples/nodejs"
+        },
+        "java": {
+            "package": "aws-java-sdk",
+            "maven": "<dependency><groupId>com.amazonaws</groupId><artifactId>aws-java-sdk</artifactId></dependency>",
+            "sample_code": "https://github.com/your-org/stock-pipeline/examples/java"
+        }
+    },
+    "required_permissions": {
+        "s3_read": [
+            "s3:GetObject",
+            "s3:ListBucket"
+        ],
+        "sns_subscribe": [
+            "sns:Subscribe",
+            "sns:Unsubscribe",
+            "sns:ListSubscriptions"
+        ]
+    },
+    "support": {
+        "documentation": "https://github.com/your-org/stock-pipeline/docs",
+        "issues": "https://github.com/your-org/stock-pipeline/issues",
+        "slack_channel": "#stock-data-api",
+        "email": "data-platform-team@yourcompany.com"
+    },
+    "sla": {
+        "availability": "99.9%",
+        "data_freshness": "15 minutes",
+        "response_time": "<2 seconds for latest data",
+        "support_hours": "9 AM - 6 PM IST, Monday-Friday"
+    }
+}

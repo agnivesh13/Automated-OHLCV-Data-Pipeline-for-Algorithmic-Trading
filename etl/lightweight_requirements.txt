@@ -1,0 +1,13 @@
+# Lightweight ETL requirements - NO heavy libraries
+# Only uses stdlib + boto3 (already available in Lambda runtime)
+
+# boto3 is included in Lambda runtime - no need to package
+# Uses only:
+# - json (stdlib)
+# - csv (stdlib) 
+# - gzip (stdlib)
+# - datetime (stdlib)
+# - typing (stdlib)
+# - io (stdlib)
+
+# No pandas, no pyarrow, no fastparquet needed!

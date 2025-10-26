@@ -1,0 +1,1 @@
+﻿https://4z97iyyil4.execute-api.ap-south-1.amazonaws.com/prod

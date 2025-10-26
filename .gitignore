@@ -1,0 +1,53 @@
+# Ignore deletion logs and backup files
+deletions-backup-*.zip
+deployment/deletion_log.txt
+node_modules
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+terraform.tfvars
+terraform.tfvars.json
+
+# Build artifacts and deployment packages
+deployment/*.zip
+deployment/*_package/
+deployment/api_package/
+deployment/lambda_package/
+deployment/token_generator_package/
+*.zip
+
+# Python packages and virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+
+# Logs
+*.log
+fyersApi.log
+fyersRequests.log
+
+# IDE and OS files
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Temporary files
+temp_data.json
+response.json
+ohlcv_*.json
+
+# Package managers
+package-lock.json
+node_modules/

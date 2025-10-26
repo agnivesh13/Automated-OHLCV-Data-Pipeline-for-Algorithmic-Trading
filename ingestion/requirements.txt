@@ -1,0 +1,12 @@
+# Core AWS SDK and HTTP libraries
+boto3==1.34.87
+botocore==1.34.87
+requests==2.31.0
+pytz==2024.1
+
+# Fyers API client (simplified dependencies)
+websocket-client==1.6.3
+oauthlib==3.2.2
+
+# Note: boto3 and botocore are available in Lambda runtime
+# Note: Avoiding fyers-apiv3 due to compilation issues, will use direct API calls
